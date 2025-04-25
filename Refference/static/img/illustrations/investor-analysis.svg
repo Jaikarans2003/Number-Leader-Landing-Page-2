@@ -1,0 +1,68 @@
+<svg width="600" height="400" viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="600" height="400" rx="20" fill="#F5F9FC" fill-opacity="0.5"/>
+  
+  <!-- Main Circle Chart -->
+  <circle cx="200" cy="200" r="120" fill="white" stroke="#E0E0E0" stroke-width="2"/>
+  
+  <!-- Pie Chart Segments -->
+  <path d="M200,200 L200,80 A120,120 0 0,1 303.92,140 Z" fill="#0A2540"/>
+  <path d="M200,200 L303.92,140 A120,120 0 0,1 303.92,260 Z" fill="#1E3F66"/>
+  <path d="M200,200 L303.92,260 A120,120 0 0,1 200,320 Z" fill="#D4AF37"/>
+  <path d="M200,200 L200,320 A120,120 0 0,1 96.08,260 Z" fill="#F1CC76"/>
+  <path d="M200,200 L96.08,260 A120,120 0 0,1 96.08,140 Z" fill="#0A2540" fill-opacity="0.6"/>
+  <path d="M200,200 L96.08,140 A120,120 0 0,1 200,80 Z" fill="#D4AF37" fill-opacity="0.6"/>
+  
+  <!-- Center Circle -->
+  <circle cx="200" cy="200" r="40" fill="white" stroke="#E0E0E0" stroke-width="1"/>
+  <text x="172" y="205" font-family="Inter, sans-serif" font-size="16" font-weight="bold" fill="#0A2540">ROI</text>
+  
+  <!-- Data Table -->
+  <rect x="360" y="100" width="200" height="200" rx="10" fill="white" stroke="#E0E0E0" stroke-width="2"/>
+  <rect x="360" y="100" width="200" height="40" rx="10" fill="#0A2540"/>
+  <text x="390" y="125" font-family="Inter, sans-serif" font-size="14" font-weight="bold" fill="white">Investment Data</text>
+  
+  <line x1="360" y1="140" x2="560" y2="140" stroke="#E0E0E0" stroke-width="1"/>
+  <line x1="360" y1="180" x2="560" y2="180" stroke="#E0E0E0" stroke-width="1"/>
+  <line x1="360" y1="220" x2="560" y2="220" stroke="#E0E0E0" stroke-width="1"/>
+  <line x1="360" y1="260" x2="560" y2="260" stroke="#E0E0E0" stroke-width="1"/>
+  
+  <line x1="440" y1="140" x2="440" y2="300" stroke="#E0E0E0" stroke-width="1"/>
+  
+  <text x="370" y="165" font-family="Inter, sans-serif" font-size="12" fill="#0A2540">SaaS</text>
+  <text x="370" y="205" font-family="Inter, sans-serif" font-size="12" fill="#0A2540">Fintech</text>
+  <text x="370" y="245" font-family="Inter, sans-serif" font-size="12" fill="#0A2540">Health</text>
+  <text x="370" y="285" font-family="Inter, sans-serif" font-size="12" fill="#0A2540">AI/ML</text>
+  
+  <text x="480" y="165" font-family="Inter, sans-serif" font-size="12" fill="#D4AF37">32%</text>
+  <text x="480" y="205" font-family="Inter, sans-serif" font-size="12" fill="#D4AF37">28%</text>
+  <text x="480" y="245" font-family="Inter, sans-serif" font-size="12" fill="#D4AF37">22%</text>
+  <text x="480" y="285" font-family="Inter, sans-serif" font-size="12" fill="#D4AF37">18%</text>
+  
+  <!-- Magnifying Glass -->
+  <circle cx="150" cy="320" r="30" fill="none" stroke="#0A2540" stroke-width="3"/>
+  <line x1="172" y1="342" x2="192" y2="362" stroke="#0A2540" stroke-width="3"/>
+  
+  <!-- Document with Charts -->
+  <g transform="translate(420, 40) scale(0.7)">
+    <rect x="0" y="0" width="80" height="100" fill="white" stroke="#0A2540" stroke-width="2"/>
+    <line x1="10" y1="20" x2="70" y2="20" stroke="#0A2540" stroke-width="2"/>
+    <line x1="10" y1="30" x2="70" y2="30" stroke="#E0E0E0" stroke-width="1"/>
+    <line x1="10" y1="40" x2="70" y2="40" stroke="#E0E0E0" stroke-width="1"/>
+    <line x1="10" y1="50" x2="70" y2="50" stroke="#E0E0E0" stroke-width="1"/>
+    
+    <rect x="20" y="60" width="10" height="30" fill="#D4AF37"/>
+    <rect x="35" y="70" width="10" height="20" fill="#1E3F66"/>
+    <rect x="50" y="65" width="10" height="25" fill="#0A2540"/>
+  </g>
+  
+  <!-- Dollar Sign Symbol -->
+  <g transform="translate(250, 320) scale(1.2)">
+    <circle cx="0" cy="0" r="25" fill="#D4AF37"/>
+    <path d="M0,-15 L0,15 M-10,-5 L10,-5 M-10,5 L10,5" stroke="white" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Connecting Lines -->
+  <line x1="240" y1="140" x2="360" y2="120" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="4"/>
+  <line x1="280" y1="200" x2="360" y2="200" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="4"/>
+  <line x1="240" y1="260" x2="360" y2="280" stroke="#E0E0E0" stroke-width="1" stroke-dasharray="4"/>
+</svg> 
