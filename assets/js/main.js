@@ -208,4 +208,84 @@ $(document).ready(function() {
             $(this).removeClass('is-invalid');
         }
     });
+    
+    // Cursor Trail Implementation
+    let dots = [];
+    const maxDots = 25; // Increased number of dots for more intense fire effect
+    
+    // Create initial dots
+    function createDots() {
+        // Remove any existing dots
+        $('.cursor-trail-dot').remove();
+        dots = [];
+        
+        // Create dot elements
+        for (let i = 0; i < maxDots; i++) {
+            const dot = $('<div class="cursor-trail-dot"></div>');
+            $('body').append(dot);
+            dots.push({
+                element: dot,
+                x: 0,
+                y: 0,
+                alpha: 0,
+                size: Math.random() * 4 + 6, // Random size between 6-10px
+                speedFactor: Math.random() * 0.3 + 0.2 // Random speed factor
+            });
+        }
+    }
+    
+    // Track mouse movement
+    $(document).on('mousemove', function(e) {
+        // Update the position of the lead dot to the current mouse position
+        if (dots.length > 0) {
+            dots[0].x = e.clientX;
+            dots[0].y = e.clientY;
+            dots[0].alpha = 1;
+            
+            // Update the position of each dot
+            for (let i = 1; i < dots.length; i++) {
+                // Follow the dot ahead of it with slight delay
+                const prevDot = dots[i - 1];
+                const dot = dots[i];
+                const dx = prevDot.x - dot.x;
+                const dy = prevDot.y - dot.y;
+                
+                // Gradually move toward the previous dot with some randomness for flickering
+                dot.x += dx * dot.speedFactor;
+                // Add slight upward movement for fire effect
+                dot.y += dy * dot.speedFactor - (i > dots.length * 0.5 ? 0.5 : 0);
+                dot.alpha = 1 - (i / maxDots);
+                
+                // Get slightly smaller as they trail
+                const currentSize = dot.size * (1 - (i / maxDots) * 0.7);
+                
+                // Add some random "flickering" to simulate fire
+                const flicker = (Math.sin(Date.now() / 100 + i) + 1) * 0.15;
+                
+                // Set position, opacity and size
+                dot.element.css({
+                    'left': dot.x + 'px',
+                    'top': dot.y + 'px',
+                    'opacity': Math.min(dot.alpha + flicker, 1),
+                    'width': currentSize + 'px',
+                    'height': currentSize + 'px'
+                });
+                
+                // Add fading class to later dots
+                if (i > maxDots * 0.6) {
+                    dot.element.addClass('fading');
+                } else {
+                    dot.element.removeClass('fading');
+                }
+            }
+        }
+    });
+    
+    // Create dots when page loads
+    createDots();
+    
+    // Recreate dots when window is resized
+    $(window).on('resize', function() {
+        createDots();
+    });
 }); 

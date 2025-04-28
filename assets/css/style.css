@@ -956,4 +956,37 @@ p {
 .nl-footer .nl-contact-info:hover ul li i {
     transform: scale(1.1);
     background-color: rgba(212, 175, 55, 0.2);
+}
+
+/* Cursor Trail */
+.cursor-trail-dot {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #FF3D00;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    opacity: 0.9;
+    box-shadow: 0 0 10px rgba(255, 61, 0, 0.8), 0 0 20px rgba(255, 143, 0, 0.6);
+    filter: blur(1px);
+    transition: width 0.2s, height 0.2s, opacity 0.2s, background-color 0.2s;
+}
+
+.cursor-trail-dot:nth-child(2n) {
+    background-color: #FF9100;
+}
+
+.cursor-trail-dot:nth-child(3n) {
+    background-color: #FFEB3B;
+    width: 8px;
+    height: 8px;
+}
+
+.cursor-trail-dot.fading {
+    opacity: 0;
+    width: 5px;
+    height: 5px;
+    background-color: #FFEB3B;
 } 
