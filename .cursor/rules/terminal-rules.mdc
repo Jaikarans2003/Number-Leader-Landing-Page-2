@@ -1,0 +1,11 @@
+---
+description: Always Powershell Command
+globs: 
+alwaysApply: false
+---
+
+
+- For all project setup, installation, and system-level tasks, generate PowerShell commands only, even if Linux or macOS commands would also be common.
+- Always assume the user is using Windows with PowerShell.
+
+

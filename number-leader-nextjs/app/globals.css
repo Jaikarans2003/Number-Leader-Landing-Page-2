@@ -1,0 +1,208 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Add custom scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-inter), var(--font-poppins), var(--font-roboto), sans-serif;
+  color: #1f2937; /* text-gray-800 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Add preloader animation */
+#preloader {
+  position: fixed;
+  inset: 0;
+  background-color: white;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+body.loaded #preloader {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f3f4f6; /* bg-gray-100 */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(25, 55, 109, 0.5); /* bg-primary-light/50 */
+  border-radius: 9999px; /* rounded-full */
+  transition: background-color 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #19376D; /* bg-primary-light */
+}
+
+/* Custom component classes */
+@layer components {
+  /* Button styles */
+  .nl-btn-primary {
+    @apply bg-[#FFB000] text-white font-medium py-3 px-6 rounded-md hover:bg-opacity-90 transition-colors;
+  }
+
+  .nl-btn-secondary {
+    @apply bg-white/10 text-white font-medium py-3 px-6 rounded-md hover:bg-white/20 transition-colors;
+  }
+
+  /* Card styles */
+  .nl-card {
+    @apply bg-white rounded-lg shadow-lg p-8 hover:shadow-xl transition-shadow;
+  }
+
+  .nl-feature-card {
+    @apply bg-white/5 backdrop-blur-sm rounded-lg p-6 transition-all duration-300 hover:bg-white/10 text-white border-l-4 border-[#FFB000];
+  }
+
+  .nl-feature-icon-wrapper {
+    @apply mb-5 bg-opacity-20 bg-[#FFB000] p-4 rounded-full inline-block;
+  }
+
+  .nl-feature-icon {
+    @apply object-contain;
+  }
+
+  /* Section styles */
+  .nl-section {
+    @apply py-20;
+  }
+
+  .nl-section-dark {
+    @apply bg-primary-dark text-white;
+  }
+
+  .nl-section-light {
+    @apply bg-gray-50;
+  }
+
+  .nl-section-white {
+    @apply bg-white;
+  }
+
+  /* Gradient backgrounds */
+  .nl-section-gradient {
+    @apply bg-gradient-to-br from-[#0a101f] via-[#111b34] to-[#172339] text-white;
+  }
+
+  /* Background pattern elements */
+  .nl-grid-pattern {
+    @apply w-full h-full bg-[url('/assets/patterns/grid-pattern.svg')] bg-repeat opacity-30;
+  }
+
+  .nl-blur-circle {
+    @apply absolute w-[500px] h-[500px] rounded-full filter blur-[80px] opacity-20;
+  }
+
+  /* Metrics display */
+  .nl-data-metrics {
+    @apply grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mt-10;
+  }
+
+  .nl-metric {
+    @apply flex flex-col items-center bg-white/5 backdrop-blur-sm p-4 rounded-lg;
+  }
+
+  .nl-metric-value {
+    @apply text-[#FFB000] text-3xl md:text-4xl font-bold mb-1;
+  }
+
+  .nl-metric-label {
+    @apply text-sm text-gray-300;
+  }
+
+  /* Parallax background sections */
+  .nl-parallax {
+    @apply bg-cover bg-fixed bg-center relative;
+  }
+
+  .nl-parallax-overlay {
+    @apply absolute inset-0 bg-black/60;
+  }
+}
+
+/* Utilities for sections */
+.section-title {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .section-title {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
+}
+
+.section-padding {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+@media (min-width: 768px) {
+  .section-padding {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+}
+
+/* Tailwind doesn't natively support text-outline */
+.text-shadow {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Navbar styles */
+.navbar-scrolled {
+  background-color: rgba(11, 36, 71, 0.95); /* bg-primary-dark/95 */
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-lg */
+}
+
+/* Define color gold for direct use */
+.text-gold {
+  color: #FFB000;
+}
+
+.bg-gold {
+  background-color: #FFB000;
+}
+
+.border-gold {
+  border-color: #FFB000;
+}
+
+/* Animation utilities */
+.animate-fade-in {
+  animation: fadeIn 0.6s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+} 
