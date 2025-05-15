@@ -7,6 +7,46 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Hide default cursor when custom cursor is active */
+@media (pointer: fine) {
+  body:has(.cursor-circle) {
+    cursor: auto !important; /* Show the default cursor */
+  }
+  
+  a:hover,
+  button:hover,
+  [role="button"]:hover,
+  input,
+  textarea,
+  select,
+  .cursor-pointer {
+    cursor: auto !important; /* Show the default cursor */
+  }
+}
+
+/* Cursor animation styles */
+.cursor-circle {
+  height: 32px;
+  width: 32px;
+  border-radius: 32px;
+  position: fixed; 
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 99999999; /* so that it stays on top of all other elements */
+  will-change: transform, left, top, background-color;
+  transition: background-color 0.1s ease;
+  backface-visibility: hidden; /* performance optimization */
+  perspective: 1000; /* performance optimization */
+  transform: translate3d(0, 0, 0); /* forces GPU acceleration */
+  transform-style: preserve-3d; /* performance optimization */
+}
+
+/* Ensure the cursor remains visible on various backgrounds */
+.cursor-circle:first-child {
+  mix-blend-mode: normal; /* Don't use exclusion blend mode */
+}
+
 body {
   font-family: var(--font-inter), var(--font-poppins), var(--font-roboto), sans-serif;
   color: #1f2937; /* text-gray-800 */
@@ -136,6 +176,28 @@ body.loaded #preloader {
   .nl-parallax-overlay {
     @apply absolute inset-0 bg-black/60;
   }
+
+  /* Testimonial slider styles */
+  .nl-testimonial-slider {
+    @apply bg-white/5 backdrop-blur-sm rounded-lg p-8;
+  }
+
+  .nl-testimonial-card {
+    @apply py-4;
+  }
+
+  .nl-slider-arrow {
+    @apply absolute top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center 
+    bg-gold text-white rounded-full z-10 transition-all duration-300 hover:bg-opacity-80;
+  }
+
+  .nl-slider-prev {
+    @apply -left-5;
+  }
+
+  .nl-slider-next {
+    @apply -right-5;
+  }
 }
 
 /* Utilities for sections */
@@ -191,6 +253,11 @@ body.loaded #preloader {
   border-color: #FFB000;
 }
 
+/* Define light blue color */
+.text-blue-400 {
+  color: #60A5FA;
+}
+
 /* Animation utilities */
 .animate-fade-in {
   animation: fadeIn 0.6s ease forwards;
@@ -205,4 +272,14 @@ body.loaded #preloader {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Custom styles for company name in Navbar */
+.company-name {
+  font-family: var(--font-haettenschweiler), Haettenschweiler, Impact, 'Arial Narrow Bold', sans-serif;
+  font-weight: normal;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-shadow: 0px 0px 1px rgba(255, 255, 255, 0.5);
+  color: #ffffff;
 } 

@@ -23,6 +23,7 @@ const ContactForm = () => {
     name: '',
     email: '',
     company: '',
+    role: '',
     message: '',
     service: 'startup'
   });
@@ -57,6 +58,7 @@ const ContactForm = () => {
             name: '',
             email: '',
             company: '',
+            role: '',
             message: '',
             service: 'startup'
           });
@@ -80,7 +82,7 @@ const ContactForm = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
           <h3 className="text-2xl font-bold text-gray-800 mb-2">Thank You!</h3>
-          <p className="text-gray-600">Your message has been sent successfully. We'll get back to you soon.</p>
+          <p className="text-gray-600">Your message has been sent successfully. We&apos;ll get back to you soon.</p>
         </div>
       ) : (
         <form onSubmit={handleSubmit}>
@@ -127,6 +129,19 @@ const ContactForm = () => {
                 required
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-light"
                 placeholder="Your Company"
+              />
+            </div>
+            <div>
+              <label htmlFor="role" className="block text-gray-700 font-medium mb-2">Your Role</label>
+              <input
+                type="text"
+                id="role"
+                name="role"
+                value={formData.role}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-light"
+                placeholder="CEO, CTO, Manager, etc."
               />
             </div>
             <div>

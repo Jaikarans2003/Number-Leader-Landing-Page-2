@@ -1,84 +1,131 @@
 'use client';
 
-import Layout from '../../components/layout/Layout';
-import { motion } from 'framer-motion';
+import Layout from '../../components/layout/StaticPageLayout';
 
-export default function TermsPage() {
-  // Animation variants
-  const sectionVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-  };
-
+const TermsAndConditionsPage = () => {
   return (
     <Layout>
-      <div className="pt-24 pb-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <motion.div 
-            className="text-center max-w-4xl mx-auto mb-12"
-            initial="hidden"
-            animate="visible"
-            variants={sectionVariants}
-          >
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-primary-dark">
-              Terms and Conditions
-            </h1>
-            <p className="text-xl text-gray-600">
-              Last updated: January 1, 2024
-            </p>
-          </motion.div>
+      <div className="container mx-auto px-4 pt-24 pb-12">
+        <h1 className="text-4xl font-bold text-center mb-8">Terms and Conditions</h1>
+        
+        <div className="max-w-4xl mx-auto space-y-8">
+          <div className="mb-6 text-gray-700">
+            <p className="font-medium">Effective Date: 03rd MAY 2025</p>
+          </div>
 
-          <motion.div 
-            className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <div className="prose prose-lg max-w-none">
-              <h2 className="text-2xl font-semibold mb-4 text-primary-dark">1. Introduction</h2>
-              <p>Welcome to Number Leader. These Terms and Conditions govern your use of our website and services provided by Number Leader.</p>
-              <p>By accessing or using our platform, you agree to be bound by these Terms. If you disagree with any part of the terms, you may not access the service.</p>
-              
-              <h2 className="text-2xl font-semibold mb-4 mt-8 text-primary-dark">2. Services Description</h2>
-              <p>Number Leader provides a comprehensive platform designed to connect startups, investors, and enablers in the ecosystem. Our services include but are not limited to:</p>
-              <ul className="list-disc ml-6 mb-4">
-                <li>Financial planning and valuation tools for startups</li>
-                <li>Investment opportunity discovery for investors</li>
-                <li>Networking and showcasing capabilities for ecosystem enablers</li>
-                <li>AI-powered document generation</li>
-                <li>CRM and pipeline management tools</li>
-              </ul>
-              
-              <h2 className="text-2xl font-semibold mb-4 mt-8 text-primary-dark">3. User Accounts</h2>
-              <p>When you create an account with us, you must provide accurate, complete, and up-to-date information. You are responsible for safeguarding the password and for all activities that occur under your account.</p>
-              <p>You agree to notify us immediately of any unauthorized use of your account or any other breach of security. We cannot and will not be liable for any loss or damage arising from your failure to comply with this provision.</p>
-              
-              <h2 className="text-2xl font-semibold mb-4 mt-8 text-primary-dark">4. Intellectual Property</h2>
-              <p>The Service and its original content, features, and functionality are and will remain the exclusive property of Number Leader and its licensors. The Service is protected by copyright, trademark, and other laws.</p>
-              <p>Our trademarks and trade dress may not be used in connection with any product or service without the prior written consent of Number Leader.</p>
-              
-              <h2 className="text-2xl font-semibold mb-4 mt-8 text-primary-dark">5. Data Privacy</h2>
-              <p>Your use of our Service is also governed by our Privacy Policy, which is incorporated by reference into these Terms. Please review our Privacy Policy for information on how we collect, use and disclose information from our users.</p>
-              
-              <h2 className="text-2xl font-semibold mb-4 mt-8 text-primary-dark">6. Termination</h2>
-              <p>We may terminate or suspend your account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms.</p>
-              <p>Upon termination, your right to use the Service will immediately cease. If you wish to terminate your account, you may simply discontinue using the Service.</p>
-              
-              <h2 className="text-2xl font-semibold mb-4 mt-8 text-primary-dark">7. Limitation of Liability</h2>
-              <p>In no event shall Number Leader, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Service.</p>
-              
-              <h2 className="text-2xl font-semibold mb-4 mt-8 text-primary-dark">8. Changes</h2>
-              <p>We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material we will try to provide at least 30 days notice prior to any new terms taking effect.</p>
-              <p>By continuing to access or use our Service after those revisions become effective, you agree to be bound by the revised terms. If you do not agree to the new terms, please stop using the Service.</p>
-              
-              <h2 className="text-2xl font-semibold mb-4 mt-8 text-primary-dark">9. Contact Us</h2>
-              <p>If you have any questions about these Terms, please contact us at:</p>
-              <p>Email: info@numberleader.com</p>
-              <p>Address: Bangalore, India</p>
-            </div>
-          </motion.div>
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">1. Acceptance of Terms</h2>
+            <p className="text-gray-700 mb-4">
+              By accessing or using Number Leader (Platform), you agree to comply with and be bound by
+              these Terms of Use (Terms). If you do not agree with these Terms, please do not use the Platform.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">2. Platform Overview</h2>
+            <p className="text-gray-700 mb-4">
+              Number Leader is a technology platform that connects startups and investors and provides
+              auxiliary services such as business valuation, due diligence, document generation, and related
+              advisory.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">3. User Eligibility</h2>
+            <p className="text-gray-700 mb-4">
+              You must be at least 18 years old and capable of entering into legally binding agreements to use
+              this Platform. By using the Platform, you represent and warrant that you meet these eligibility
+              requirements.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">4. User Obligations</h2>
+            <p className="text-gray-700 mb-4">
+              Users agree to:
+            </p>
+            <ul className="list-disc list-inside ml-4 space-y-2 text-gray-700">
+              <li>Provide accurate, complete, and updated information during registration and usage.</li>
+              <li>Use the Platform only for lawful purposes.</li>
+              <li>Not engage in any activity that interferes with or disrupts the services or the servers.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">5. Disclaimers</h2>
+            <p className="text-gray-700 mb-4">
+              The Platform does not provide financial or investment advice. Any investment decision made by
+              users is at their own risk. The Platform disclaims liability for any loss arising from reliance on any
+              content, report, or recommendation presented.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">6. Intellectual Property</h2>
+            <p className="text-gray-700 mb-4">
+              All content, trademarks, logos, and service marks are the property of Number Leader or its
+              licensors. Unauthorized use is strictly prohibited.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">7. Privacy</h2>
+            <p className="text-gray-700 mb-4">
+              Our Privacy Policy explains how we collect, use, and store your information. By using the Platform,
+              you consent to the collection and use of information as described therein.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">8. Fees and Payments</h2>
+            <p className="text-gray-700 mb-4">
+              Some services on the Platform may be chargeable. Users will be notified of applicable fees before
+              incurring charges.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">9. Termination</h2>
+            <p className="text-gray-700 mb-4">
+              We reserve the right to terminate or suspend access to the Platform without prior notice for any
+              conduct that violates these Terms or is otherwise harmful to other users or the integrity of the
+              Platform.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">10. Governing Law and Legal Recourse</h2>
+            <p className="text-gray-700 mb-4">
+              These Terms are governed by and construed in accordance with the laws of India. Any disputes
+              will be subject to exclusive jurisdiction of the courts of India.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">11. Modifications</h2>
+            <p className="text-gray-700 mb-4">
+              We may revise these Terms at any time. Continued use of the Platform after changes implies
+              acceptance of the modified Terms.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">12. Contact</h2>
+            <p className="text-gray-700 mb-4">
+            For questions regarding these Terms, contact us at <a href="mailto:nitish@numberleader.com" className="text-blue-500 hover:text-blue-700">nitish@numberleader.com</a>.
+            </p>
+          </section>
+          
+        </div>
+
+        <div className="mt-12 p-4 bg-gray-50 rounded-lg">
+          <p className="text-sm text-gray-600 italic">
+            Disclaimer: The Terms and Conditions provided herein are part of the alpha launch of NUMBER LEADER and are for informational purposes only. They are not legally binding on the platform or its users and may be subject to updates and modifications as the platform evolves.
+          </p>
         </div>
       </div>
     </Layout>
   );
-} 
+};
+
+export default TermsAndConditionsPage; 

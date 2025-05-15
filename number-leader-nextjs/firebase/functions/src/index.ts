@@ -9,8 +9,11 @@ import { emailConfig } from './environment';
 // Initialize Firebase Admin SDK
 admin.initializeApp();
 
-// URL to the existing Number Leader brochure PDF
-const BROCHURE_URL = 'https://firebasestorage.googleapis.com/v0/b/numberleader-9210c.firebasestorage.app/o/Number%20Leader%20Brochure.pdf?alt=media&token=51898f02-e69a-463f-8946-2d27a329f531';
+// URL to the latest Number Leader brochure PDF in Firebase Storage
+const BROCHURE_URL = 'https://firebasestorage.googleapis.com/v0/b/numberleader-9210c.firebasestorage.app/o/Number%20Leader%20Brochure.pdf?alt=media&token=dcdd211a-84a7-4a5b-ae4b-9da13f4b303c';
+
+// Admin email address - use environment variable
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'notify@numberleader.com';
 
 // Log email configuration (with password masked for security)
 console.log(`Email configuration initialized with: 
@@ -19,6 +22,8 @@ console.log(`Email configuration initialized with:
   - User: ${emailConfig.auth.user}
   - Secure: ${emailConfig.secure}
   - Password provided: ${emailConfig.auth.pass ? 'Yes' : 'No'}
+  - Admin Email: ${ADMIN_EMAIL}
+  - Brochure URL: ${BROCHURE_URL}
 `);
 
 // Create a function to get a fresh transporter for each email
@@ -36,7 +41,10 @@ const getTransporter = () => {
 interface ServicePageData {
   name: string;
   email: string;
+  company?: string;
+  role?: string;
   message?: string;
+  service?: string;
 }
 
 // Define the interface for brochure request tracking
@@ -56,9 +64,13 @@ interface LandingPageContactData {
 }
 
 // Define the Cloud Function using v4 syntax
-export const sendServicesBrochure = onDocumentCreated(
-  'CTA_ServicesPage/{documentId}',
-  async (event) => {
+export const sendServicesBrochure = onDocumentCreated({
+  document: 'CTA_ServicesPage/{documentId}',
+  timeoutSeconds: 300,
+  memory: "512MiB",
+  maxInstances: 10,
+  minInstances: 0
+}, async (event) => {
     try {
       // Get document data
       const snapshot = event.data as DocumentSnapshot | undefined;
@@ -115,7 +127,7 @@ export const sendServicesBrochure = onDocumentCreated(
           // Send abuse notification to admin
           const adminNotificationOptions = {
             from: `"NUMBER LEADER" <${emailConfig.auth.user}>`,
-            to: 'jaikaran.pesce@gmail.com',
+            to: ADMIN_EMAIL,
             subject: 'ALERT: Brochure Request Limit Exceeded',
             html: `
               <div style="font-family: Arial, sans-serif; color: #333;">
@@ -208,6 +220,7 @@ export const sendServicesBrochure = onDocumentCreated(
       
       // Download PDF brochure
       console.log(`Downloading brochure for ${email}`);
+      try {
       const response = await axios.get(BROCHURE_URL, {
         responseType: 'arraybuffer'
       });
@@ -245,7 +258,7 @@ export const sendServicesBrochure = onDocumentCreated(
       // Email content for admin notification
       const adminNotificationOptions = {
         from: `"NUMBER LEADER" <${emailConfig.auth.user}>`,
-        to: 'jaikaran.pesce@gmail.com',
+        to: ADMIN_EMAIL,
         subject: 'Brochure Sent - NUMBER LEADER',
         html: `
           <div style="font-family: Arial, sans-serif; color: #333;">
@@ -260,6 +273,18 @@ export const sendServicesBrochure = onDocumentCreated(
               <tr>
                 <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Email:</td>
                 <td style="padding: 8px; border: 1px solid #ddd;">${email}</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Role:</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">${data.role || 'Not specified'}</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Company:</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">${data.company || 'Not specified'}</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Service Type:</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">${data.service || 'Not specified'}</td>
               </tr>
               <tr>
                 <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Request Count:</td>
@@ -293,11 +318,7 @@ export const sendServicesBrochure = onDocumentCreated(
         
         // Send admin notification
         const adminInfo = await adminTransporter.sendMail(adminNotificationOptions);
-        console.log(`Admin notification sent to jaikaran.pesce@gmail.com. Message ID: ${adminInfo.messageId}`);
-      } catch (emailError) {
-        console.error('Email sending error details:', emailError);
-        throw emailError; // rethrow to handle in the main catch block
-      }
+        console.log(`Admin notification sent to ${ADMIN_EMAIL}. Message ID: ${adminInfo.messageId}`);
       
       // Update document with success status
       await snapshot.ref.update({
@@ -308,6 +329,14 @@ export const sendServicesBrochure = onDocumentCreated(
       });
       
       return { success: true };
+        } catch (emailError) {
+          console.error('Email sending error details:', emailError);
+          throw emailError; // rethrow to handle in the main catch block
+        }
+      } catch (axiosError) {
+        console.error('Error downloading brochure:', axiosError);
+        throw axiosError;
+      }
     } catch (error: unknown) {
       console.error('Error in sendServicesBrochure function:', error);
       
@@ -330,9 +359,13 @@ export const sendServicesBrochure = onDocumentCreated(
 );
 
 // Define the Cloud Function for sending notifications when a contact form is submitted
-export const notifyLandingPageContact = onDocumentCreated(
-  'CTA_LandingPage/{documentId}',
-  async (event) => {
+export const notifyLandingPageContact = onDocumentCreated({
+  document: 'CTA_LandingPage/{documentId}',
+  timeoutSeconds: 300,
+  memory: "512MiB",
+  maxInstances: 10,
+  minInstances: 0
+}, async (event) => {
     try {
       // Get document data
       const snapshot = event.data as DocumentSnapshot | undefined;
@@ -348,7 +381,7 @@ export const notifyLandingPageContact = onDocumentCreated(
       // Email content for the notification
       const mailOptions = {
         from: `"NUMBER LEADER" <${emailConfig.auth.user}>`,
-        to: 'jaikaran.pesce@gmail.com', // Email to notify about the new contact
+        to: ADMIN_EMAIL, // Email to notify about the new contact
         subject: 'New Contact Form Submission - NUMBER LEADER',
         html: `
           <div style="font-family: Arial, sans-serif; color: #333;">
@@ -387,7 +420,7 @@ export const notifyLandingPageContact = onDocumentCreated(
       const transporter = getTransporter();
       
       // Send email notification
-      console.log(`Sending notification email to jaikaran.pesce@gmail.com for new contact form submission`);
+      console.log(`Sending notification email to ${ADMIN_EMAIL} for new contact form submission`);
       try {
         const info = await transporter.sendMail(mailOptions);
         console.log(`Notification email sent successfully. Message ID: ${info.messageId}`);

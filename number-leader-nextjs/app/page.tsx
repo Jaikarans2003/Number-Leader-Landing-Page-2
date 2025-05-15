@@ -8,6 +8,7 @@ import InvestorsSection from '../components/sections/InvestorsSection';
 import EnablersSection from '../components/sections/EnablersSection';
 import MetricsSection from '../components/sections/MetricsSection';
 import ContactSection from '../components/sections/ContactSection';
+import TestimonialsSection from '../components/sections/TestimonialsSection';
 import { useEffect } from 'react';
 
 export default function Home() {
@@ -36,6 +37,7 @@ export default function Home() {
         <MetricsSection />
         
         <ContactSection />
+        <TestimonialsSection />
       </Layout>
     </>
   );

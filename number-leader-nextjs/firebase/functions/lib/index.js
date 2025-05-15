@@ -45,8 +45,10 @@ const axios_1 = __importDefault(require("axios"));
 const environment_1 = require("./environment");
 // Initialize Firebase Admin SDK
 admin.initializeApp();
-// URL to the existing Number Leader brochure PDF
-const BROCHURE_URL = 'https://firebasestorage.googleapis.com/v0/b/numberleader-9210c.firebasestorage.app/o/Number%20Leader%20Brochure.pdf?alt=media&token=51898f02-e69a-463f-8946-2d27a329f531';
+// URL to the latest Number Leader brochure PDF in Firebase Storage
+const BROCHURE_URL = 'https://firebasestorage.googleapis.com/v0/b/numberleader-9210c.firebasestorage.app/o/Number%20Leader%20Brochure.pdf?alt=media&token=dcdd211a-84a7-4a5b-ae4b-9da13f4b303c';
+// Admin email address - use environment variable
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'notify@numberleader.com';
 // Log email configuration (with password masked for security)
 console.log(`Email configuration initialized with: 
   - Host: ${environment_1.emailConfig.host}
@@ -54,6 +56,8 @@ console.log(`Email configuration initialized with:
   - User: ${environment_1.emailConfig.auth.user}
   - Secure: ${environment_1.emailConfig.secure}
   - Password provided: ${environment_1.emailConfig.auth.pass ? 'Yes' : 'No'}
+  - Admin Email: ${ADMIN_EMAIL}
+  - Brochure URL: ${BROCHURE_URL}
 `);
 // Create a function to get a fresh transporter for each email
 const getTransporter = () => {
@@ -64,7 +68,13 @@ const getTransporter = () => {
     return transporter;
 };
 // Define the Cloud Function using v4 syntax
-exports.sendServicesBrochure = (0, firestore_1.onDocumentCreated)('CTA_ServicesPage/{documentId}', async (event) => {
+exports.sendServicesBrochure = (0, firestore_1.onDocumentCreated)({
+    document: 'CTA_ServicesPage/{documentId}',
+    timeoutSeconds: 300,
+    memory: "512MiB",
+    maxInstances: 10,
+    minInstances: 0
+}, async (event) => {
     try {
         // Get document data
         const snapshot = event.data;
@@ -110,7 +120,7 @@ exports.sendServicesBrochure = (0, firestore_1.onDocumentCreated)('CTA_ServicesP
                 // Send abuse notification to admin
                 const adminNotificationOptions = {
                     from: `"NUMBER LEADER" <${environment_1.emailConfig.auth.user}>`,
-                    to: 'jaikaran.pesce@gmail.com',
+                    to: ADMIN_EMAIL,
                     subject: 'ALERT: Brochure Request Limit Exceeded',
                     html: `
               <div style="font-family: Arial, sans-serif; color: #333;">
@@ -196,99 +206,117 @@ exports.sendServicesBrochure = (0, firestore_1.onDocumentCreated)('CTA_ServicesP
         }
         // Download PDF brochure
         console.log(`Downloading brochure for ${email}`);
-        const response = await axios_1.default.get(BROCHURE_URL, {
-            responseType: 'arraybuffer'
-        });
-        // Convert to Buffer
-        const pdfBuffer = Buffer.from(response.data);
-        // Email content for user
-        const userEmailOptions = {
-            from: `"NUMBER LEADER" <${environment_1.emailConfig.auth.user}>`,
-            to: email,
-            subject: 'Hi, welcome to NUMBER LEADER',
-            html: `
-          <div style="font-family: Arial, sans-serif; color: #333;">
-            <h2 style="color: #1a5276;">Welcome to NUMBER LEADER!</h2>
-            <p>Dear ${name},</p>
-            <p>Thank you for your interest in NUMBER LEADER. We're excited to have you join our community.</p>
-            <p>We've attached our services brochure with details about how we can help your business grow.</p>
-            ${message ? `<p>Regarding your message: <em>"${message}"</em></p>
-            <p>Our team will contact you shortly to discuss your specific needs.</p>` : ''}
-            <p>If you have any questions, please don't hesitate to reach out to us.</p>
-            <br>
-            <p>Best regards,</p>
-            <p><strong>NUMBER LEADER Team</strong></p>
-          </div>
-        `,
-            attachments: [
-                {
-                    filename: 'NumberLeader_Services_Brochure.pdf',
-                    content: pdfBuffer
-                }
-            ]
-        };
-        // Email content for admin notification
-        const adminNotificationOptions = {
-            from: `"NUMBER LEADER" <${environment_1.emailConfig.auth.user}>`,
-            to: 'jaikaran.pesce@gmail.com',
-            subject: 'Brochure Sent - NUMBER LEADER',
-            html: `
-          <div style="font-family: Arial, sans-serif; color: #333;">
-            <h2 style="color: #1a5276;">Brochure Sent Notification</h2>
-            <p>A brochure has been sent to a user from the NUMBER LEADER services page.</p>
-            <h3>Details:</h3>
-            <table style="border-collapse: collapse; width: 100%;">
-              <tr>
-                <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Name:</td>
-                <td style="padding: 8px; border: 1px solid #ddd;">${name}</td>
-              </tr>
-              <tr>
-                <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Email:</td>
-                <td style="padding: 8px; border: 1px solid #ddd;">${email}</td>
-              </tr>
-              <tr>
-                <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Request Count:</td>
-                <td style="padding: 8px; border: 1px solid #ddd;">${requestTracking.count} of 5 allowed</td>
-              </tr>
-              ${message ? `
-              <tr>
-                <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Message:</td>
-                <td style="padding: 8px; border: 1px solid #ddd;">${message}</td>
-              </tr>
-              ` : ''}
-              <tr>
-                <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Document ID:</td>
-                <td style="padding: 8px; border: 1px solid #ddd;">${documentId}</td>
-              </tr>
-            </table>
-            <p>This is an automated notification from the NUMBER LEADER website.</p>
-          </div>
-        `
-        };
-        // Get fresh transporters for each email
-        const userTransporter = getTransporter();
-        const adminTransporter = getTransporter();
-        // Send email to user
-        console.log(`Sending brochure email to ${email}`);
         try {
-            const userInfo = await userTransporter.sendMail(userEmailOptions);
-            console.log(`Email sent successfully to ${email}. Message ID: ${userInfo.messageId}`);
-            // Send admin notification
-            const adminInfo = await adminTransporter.sendMail(adminNotificationOptions);
-            console.log(`Admin notification sent to jaikaran.pesce@gmail.com. Message ID: ${adminInfo.messageId}`);
+            const response = await axios_1.default.get(BROCHURE_URL, {
+                responseType: 'arraybuffer'
+            });
+            // Convert to Buffer
+            const pdfBuffer = Buffer.from(response.data);
+            // Email content for user
+            const userEmailOptions = {
+                from: `"NUMBER LEADER" <${environment_1.emailConfig.auth.user}>`,
+                to: email,
+                subject: 'Hi, welcome to NUMBER LEADER',
+                html: `
+            <div style="font-family: Arial, sans-serif; color: #333;">
+              <h2 style="color: #1a5276;">Welcome to NUMBER LEADER!</h2>
+              <p>Dear ${name},</p>
+              <p>Thank you for your interest in NUMBER LEADER. We're excited to have you join our community.</p>
+              <p>We've attached our services brochure with details about how we can help your business grow.</p>
+              ${message ? `<p>Regarding your message: <em>"${message}"</em></p>
+              <p>Our team will contact you shortly to discuss your specific needs.</p>` : ''}
+              <p>If you have any questions, please don't hesitate to reach out to us.</p>
+              <br>
+              <p>Best regards,</p>
+              <p><strong>NUMBER LEADER Team</strong></p>
+            </div>
+          `,
+                attachments: [
+                    {
+                        filename: 'NumberLeader_Services_Brochure.pdf',
+                        content: pdfBuffer
+                    }
+                ]
+            };
+            // Email content for admin notification
+            const adminNotificationOptions = {
+                from: `"NUMBER LEADER" <${environment_1.emailConfig.auth.user}>`,
+                to: ADMIN_EMAIL,
+                subject: 'Brochure Sent - NUMBER LEADER',
+                html: `
+            <div style="font-family: Arial, sans-serif; color: #333;">
+              <h2 style="color: #1a5276;">Brochure Sent Notification</h2>
+              <p>A brochure has been sent to a user from the NUMBER LEADER services page.</p>
+              <h3>Details:</h3>
+              <table style="border-collapse: collapse; width: 100%;">
+                <tr>
+                  <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Name:</td>
+                  <td style="padding: 8px; border: 1px solid #ddd;">${name}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Email:</td>
+                  <td style="padding: 8px; border: 1px solid #ddd;">${email}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Role:</td>
+                  <td style="padding: 8px; border: 1px solid #ddd;">${data.role || 'Not specified'}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Company:</td>
+                  <td style="padding: 8px; border: 1px solid #ddd;">${data.company || 'Not specified'}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Service Type:</td>
+                  <td style="padding: 8px; border: 1px solid #ddd;">${data.service || 'Not specified'}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Request Count:</td>
+                  <td style="padding: 8px; border: 1px solid #ddd;">${requestTracking.count} of 5 allowed</td>
+                </tr>
+                ${message ? `
+                <tr>
+                  <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Message:</td>
+                  <td style="padding: 8px; border: 1px solid #ddd;">${message}</td>
+                </tr>
+                ` : ''}
+                <tr>
+                  <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">Document ID:</td>
+                  <td style="padding: 8px; border: 1px solid #ddd;">${documentId}</td>
+                </tr>
+              </table>
+              <p>This is an automated notification from the NUMBER LEADER website.</p>
+            </div>
+          `
+            };
+            // Get fresh transporters for each email
+            const userTransporter = getTransporter();
+            const adminTransporter = getTransporter();
+            // Send email to user
+            console.log(`Sending brochure email to ${email}`);
+            try {
+                const userInfo = await userTransporter.sendMail(userEmailOptions);
+                console.log(`Email sent successfully to ${email}. Message ID: ${userInfo.messageId}`);
+                // Send admin notification
+                const adminInfo = await adminTransporter.sendMail(adminNotificationOptions);
+                console.log(`Admin notification sent to ${ADMIN_EMAIL}. Message ID: ${adminInfo.messageId}`);
+                // Update document with success status
+                await snapshot.ref.update({
+                    emailSent: true,
+                    emailSentAt: admin.firestore.FieldValue.serverTimestamp(),
+                    brochureUrl: BROCHURE_URL,
+                    requestCount: requestTracking.count
+                });
+                return { success: true };
+            }
+            catch (emailError) {
+                console.error('Email sending error details:', emailError);
+                throw emailError; // rethrow to handle in the main catch block
+            }
         }
-        catch (emailError) {
-            console.error('Email sending error details:', emailError);
-            throw emailError; // rethrow to handle in the main catch block
+        catch (axiosError) {
+            console.error('Error downloading brochure:', axiosError);
+            throw axiosError;
         }
-        // Update document with success status
-        await snapshot.ref.update({
-            emailSent: true,
-            emailSentAt: admin.firestore.FieldValue.serverTimestamp(),
-            brochureUrl: BROCHURE_URL,
-            requestCount: requestTracking.count
-        });
-        return { success: true };
     }
     catch (error) {
         console.error('Error in sendServicesBrochure function:', error);
@@ -309,7 +337,13 @@ exports.sendServicesBrochure = (0, firestore_1.onDocumentCreated)('CTA_ServicesP
     }
 });
 // Define the Cloud Function for sending notifications when a contact form is submitted
-exports.notifyLandingPageContact = (0, firestore_1.onDocumentCreated)('CTA_LandingPage/{documentId}', async (event) => {
+exports.notifyLandingPageContact = (0, firestore_1.onDocumentCreated)({
+    document: 'CTA_LandingPage/{documentId}',
+    timeoutSeconds: 300,
+    memory: "512MiB",
+    maxInstances: 10,
+    minInstances: 0
+}, async (event) => {
     try {
         // Get document data
         const snapshot = event.data;
@@ -323,7 +357,7 @@ exports.notifyLandingPageContact = (0, firestore_1.onDocumentCreated)('CTA_Landi
         // Email content for the notification
         const mailOptions = {
             from: `"NUMBER LEADER" <${environment_1.emailConfig.auth.user}>`,
-            to: 'jaikaran.pesce@gmail.com', // Email to notify about the new contact
+            to: ADMIN_EMAIL, // Email to notify about the new contact
             subject: 'New Contact Form Submission - NUMBER LEADER',
             html: `
           <div style="font-family: Arial, sans-serif; color: #333;">
@@ -360,7 +394,7 @@ exports.notifyLandingPageContact = (0, firestore_1.onDocumentCreated)('CTA_Landi
         // Get a fresh transporter for this email
         const transporter = getTransporter();
         // Send email notification
-        console.log(`Sending notification email to jaikaran.pesce@gmail.com for new contact form submission`);
+        console.log(`Sending notification email to ${ADMIN_EMAIL} for new contact form submission`);
         try {
             const info = await transporter.sendMail(mailOptions);
             console.log(`Notification email sent successfully. Message ID: ${info.messageId}`);

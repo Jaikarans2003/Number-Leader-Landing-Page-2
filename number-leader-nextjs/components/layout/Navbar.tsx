@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { FaBars, FaChevronDown } from 'react-icons/fa';
+import { usePathname } from 'next/navigation';
 
 // Type definitions
 interface SubNavItem {
@@ -20,34 +20,55 @@ interface NavItem {
 
 interface NavbarProps {
   isServicesPage?: boolean;
+  isStaticPage?: boolean;
 }
 
-const Navbar = ({ isServicesPage = false }: NavbarProps) => {
+const Navbar = ({ isServicesPage = false, isStaticPage = false }: NavbarProps) => {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [productsDropdown, setProductsDropdown] = useState(false);
-  
+  const pathname = usePathname();
   const productsRef = useRef<HTMLDivElement>(null);
+  
+  // Check if current page is admin page
+  const isAdminPage = pathname === '/admin';
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
+    // Only add scroll listener if not on a static page
+    if (!isStaticPage) {
+      const handleScroll = () => {
+        setScrolled(window.scrollY > 50);
+      };
+      
+      window.addEventListener('scroll', handleScroll);
+      
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+    } else {
+      // For static pages, always set scrolled to true
+      setScrolled(true);
+    }
+  }, [isStaticPage]);
 
+  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (productsRef.current && !productsRef.current.contains(event.target as Node)) {
         setProductsDropdown(false);
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
     document.addEventListener('mousedown', handleClickOutside);
     
     return () => {
-      window.removeEventListener('scroll', handleScroll);
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+  
+  // Don't display navbar on admin page
+  if (isAdminPage) {
+    return null;
+  }
 
   // Use different nav items for services page
   const mainNavItems: NavItem[] = [
@@ -63,34 +84,41 @@ const Navbar = ({ isServicesPage = false }: NavbarProps) => {
       ]
     },
     { name: 'Services', href: '/services' },
-    { name: 'Metrics', href: '#metrics' },
     { name: 'Contact', href: '#contact' }
   ];
 
   const servicesNavItems: NavItem[] = [
-    { name: 'Services', href: '#' }
+    { name: 'Home', href: '/' },
+    { name: 'About', href: '/#about' },
+    { 
+      name: 'Products', 
+      dropdown: true,
+      items: [
+        { name: 'Startups', href: '/#startups' },
+        { name: 'Investors', href: '/#investors' },
+        { name: 'Enablers', href: '/#enablers' }
+      ]
+    },
+    { name: 'Services', href: '#' },
+    { name: 'Contact', href: '/#contact' }
   ];
 
+  // Determine which nav items to use
   const navItems = isServicesPage ? servicesNavItems : mainNavItems;
 
-  // Determine navbar style
-  const navbarStyle = isServicesPage 
+  // Determine navbar style - always solid background for static pages
+  const navbarStyle = isStaticPage 
     ? 'bg-primary-dark shadow-lg py-2' 
-    : `${scrolled ? 'bg-primary-dark/95 shadow-lg py-2' : 'bg-transparent py-4'}`;
+    : (scrolled ? 'bg-primary-dark/95 shadow-lg py-2' : 'bg-transparent py-4');
 
   return (
     <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${navbarStyle}`}>
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center">
-            <Image 
-              src="/assets/img/Logos/Number Leader White.png" 
-              alt="Number Leader Logo" 
-              width={45} 
-              height={45} 
-              className="h-[45px] w-auto" 
-            />
-            <span className="ml-2 text-white text-xl font-semibold">Number Leader</span>
+            <span className="text-2xl md:text-3xl company-name px-2 py-1 rounded">
+              Number<span className="text-gold">Leader</span>
+            </span>
           </Link>
           
           {/* Desktop Menu */}
@@ -140,7 +168,7 @@ const Navbar = ({ isServicesPage = false }: NavbarProps) => {
 
             {/* Login/SignUp Button */}
             <Link 
-              href="https://numberleader.cortexcraft.com/users/sign_in" 
+              href="/auth" 
               className="bg-gold hover:bg-gold/90 text-white px-5 py-2 rounded-md transition-colors font-medium"
             >
               Login / SignUp

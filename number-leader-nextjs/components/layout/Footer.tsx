@@ -2,12 +2,12 @@
 
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { 
   FaLinkedin, 
   FaTwitter, 
   FaInstagram, 
-  FaYoutube
+  FaYoutube,
+  FaSpotify
 } from 'react-icons/fa';
 
 interface FooterProps {
@@ -40,14 +40,9 @@ const Footer = ({ isServicesPage = false }: FooterProps) => {
           {/* Logo and description */}
           <div>
             <Link href="/" className="flex items-center mb-4">
-              <Image 
-                src="/assets/img/Logos/Number Leader White.png" 
-                alt="Number Leader Logo" 
-                width={40} 
-                height={40}
-                className="h-[40px] w-auto"
-              />
-              <span className="ml-2 text-xl font-semibold">Number Leader</span>
+              <span className="text-2xl company-name">
+                Number<span className="text-gold">Leader</span>
+              </span>
             </Link>
             <p className="text-gray-300 mb-6">
               Transforming startups into market leaders through strategic guidance, innovative solutions, and data-driven insights.
@@ -84,29 +79,21 @@ const Footer = ({ isServicesPage = false }: FooterProps) => {
 
           {/* Contact Info */}
           <div>
-            <h3 className="text-lg font-bold mb-4">Contact Us</h3>
+            <h3 className="text-lg font-bold mb-4">CONTACT</h3>
             <ul className="space-y-3">
               <li className="text-gray-300">
-                <span className="block">Email:</span>
+                <span className="block">BENGALURU, INDIA</span>
+              </li>
+              <li className="text-gray-300">
                 <a href="mailto:info@numberleader.com" className="hover:text-gold transition-colors">
                   info@numberleader.com
                 </a>
-              </li>
-              <li className="text-gray-300">
-                <span className="block">Phone:</span>
-                <a href="tel:+1234567890" className="hover:text-gold transition-colors">
-                  +1 (234) 567-890
-                </a>
-              </li>
-              <li className="text-gray-300">
-                <span className="block">Location:</span>
-                <span>New York, NY 10001, USA</span>
               </li>
             </ul>
 
             {/* Social Media */}
             <div className="mt-6 flex space-x-4">
-              <a href="https://www.linkedin.com/company/number-leader/" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-gold transition-colors">
+              <a href="https://www.linkedin.com/company/number-leader" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-gold transition-colors">
                 <FaLinkedin size={24} />
               </a>
               <a href="https://x.com/Number_Leader" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-gold transition-colors">
@@ -118,13 +105,22 @@ const Footer = ({ isServicesPage = false }: FooterProps) => {
               <a href="https://youtube.com/@numberleader?si=0Zs72kSPge44lyho" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-gold transition-colors">
                 <FaYoutube size={24} />
               </a>
+              <a href="https://open.spotify.com/user/31fuvezjqvgg2anpj5sozk3m32bq" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-gold transition-colors">
+                <FaSpotify size={24} />
+              </a>
             </div>
           </div>
         </div>
 
         {/* Copyright */}
         <div className="mt-12 pt-8 border-t border-gray-700 text-center text-gray-400">
-          <p>&copy; {new Date().getFullYear()} Number Leader. All rights reserved.</p>
+          <p className="text-xs italic mb-2">Platform for Alpha Users Only</p>
+          <p>
+            <a href="https://www.linkedin.com/in/jaikaran-s-a52539322/" target="_blank" rel="noopener noreferrer" className="text-gray hover:text-gold transition-colors">
+              &copy; 2025 Number Leader. All rights reserved.
+            </a>
+          </p>
+          <p className="hidden">This website is developed and maintained by Jaikiran</p>
         </div>
       </div>
     </footer>

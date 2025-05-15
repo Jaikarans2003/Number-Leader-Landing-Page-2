@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { saveContactForm } from '../../lib/firestore';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
 
 const ContactSection = () => {
   const [formData, setFormData] = useState({
@@ -52,39 +54,42 @@ const ContactSection = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitError('');
     
-    if (validateForm()) {
-      setIsSubmitting(true);
+    // Basic validation
+    if (!formData.name || !formData.email || !formData.message) {
+      setSubmitError('Please fill in all required fields');
+      return;
+    }
+    
+    setIsSubmitting(true);
+    setSubmitError('');
+    setSubmitSuccess(false);
+    
+    try {
+      // Create a reference to the CTA_LandingPage collection
+      const ctaRef = collection(db, 'CTA_LandingPage');
       
-      try {
-        // Use Firestore service to save form data
-        const result = await saveContactForm(formData);
-        
-        if (result.success) {
-          setSubmitSuccess(true);
-          
-          // Reset form
-          setFormData({
-            name: '',
-            email: '',
-            userType: '',
-            message: ''
-          });
-          
-          // Hide success message after 5 seconds
-          setTimeout(() => {
-            setSubmitSuccess(false);
-          }, 5000);
-        } else {
-          setSubmitError('There was an error submitting your message. Please try again.');
-        }
-      } catch (error) {
-        console.error('Error submitting contact form:', error);
-        setSubmitError('There was an error submitting your message. Please try again.');
-      } finally {
-        setIsSubmitting(false);
-      }
+      // Add a new document with form data
+      await addDoc(ctaRef, {
+        ...formData,
+        timestamp: serverTimestamp(),
+        source: 'landing_page_contact'
+      });
+      
+      // Reset form after successful submission
+      setFormData({
+        name: '',
+        email: '',
+        userType: '',
+        message: '',
+      });
+      
+      setSubmitSuccess(true);
+    } catch (error: unknown) {
+      console.error('Error submitting form:', error);
+      setSubmitError('There was an error sending your message. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 

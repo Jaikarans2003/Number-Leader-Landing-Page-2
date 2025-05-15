@@ -54,12 +54,14 @@ const MetricsSection = () => {
     { value: "50+", title: "Startups Mentored" },
     { value: "5000+", title: "Benchmarked Companies" },
     { value: "100+", title: "Investor Network" },
+    { value: "100+", title: "Investor Network" },
     { value: "20+", title: "Funds Network" },
     { value: "5+", title: "Pitching Events" }
+    
   ];
 
   const [slideIndex, setSlideIndex] = useState(0);
-  const totalSlides = 2; // We have 5 metrics, showing 3 at a time means we need 2 slides (0 and 1)
+  const totalSlides = 2; // We have 6 metrics, showing 3 at a time means we need 2 slides (0 and 1)
   
   // For mobile, we'll track the current metric separately
   const [mobileMetricIndex, setMobileMetricIndex] = useState(0);
@@ -83,15 +85,6 @@ const MetricsSection = () => {
     setMobileMetricIndex((prevIndex) => (prevIndex - 1 + totalMobileMetrics) % totalMobileMetrics);
   };
   
-  // Get visible metrics based on current slide index
-  const getVisibleMetrics = () => {
-    if (slideIndex === 0) {
-      return metrics.slice(0, 3); // First 3 metrics
-    } else {
-      return metrics.slice(3); // Remaining metrics (2)
-    }
-  };
-
   return (
     <section id="metrics" className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
@@ -170,35 +163,23 @@ const MetricsSection = () => {
                 ))}
               </div>
             ) : (
-              // SECOND SLIDE - Last 2 metrics
-              <div className="grid grid-cols-2 gap-6">
-                <motion.div
-                  key="funds-network"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5 }}
-                  className="p-8 bg-white rounded-lg shadow-lg"
-                >
-                  <Counter 
-                    value={metrics[3].value} 
-                    title={metrics[3].title} 
-                  />
-                </motion.div>
-                
-                <motion.div
-                  key="pitching-events"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.1 }}
-                  className="p-8 bg-white rounded-lg shadow-lg"
-                >
-                  <Counter 
-                    value={metrics[4].value} 
-                    title={metrics[4].title} 
-                  />
-                </motion.div>
+              // SECOND SLIDE - Last 3 metrics
+              <div className="grid grid-cols-3 gap-6">
+                {metrics.slice(3, 6).map((metric, index) => (
+                  <motion.div
+                    key={index + 3}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="p-8 bg-white rounded-lg shadow-lg"
+                  >
+                    <Counter 
+                      value={metric.value} 
+                      title={metric.title} 
+                    />
+                  </motion.div>
+                ))}
               </div>
             )}
           </div>

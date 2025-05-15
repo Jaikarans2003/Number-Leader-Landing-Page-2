@@ -2,10 +2,11 @@
 
 import Link from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 const HeroSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end start"]
@@ -15,13 +16,21 @@ const HeroSection = () => {
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.3]);
 
+  // Preload image
+  useEffect(() => {
+    const img = new window.Image();
+    img.src = '/assets/img/backgrounds/hero-bg.webp'; // Use WebP format instead of PNG
+    img.onload = () => setImageLoaded(true);
+  }, []);
+
   return (
     <section 
       id="home"
       ref={sectionRef}
       className="nl-parallax relative min-h-screen flex items-center justify-center overflow-hidden"
       style={{
-        backgroundImage: "url('/assets/img/backgrounds/hero-bg.jpg')",
+        backgroundImage: imageLoaded ? "url('/assets/img/backgrounds/hero-bg.webp')" : "none",
+        backgroundColor: "#0B2447", // Fallback color until image loads
         height: '100vh',
       }}
     >

@@ -1,6 +1,14 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Inter, Poppins, Roboto } from 'next/font/google';
+import localFont from 'next/font/local';
+
+// Define local font for Haettenschweiler
+const haettenschweiler = localFont({
+  src: '../public/assets/fonts/HATTEN.ttf',
+  variable: '--font-haettenschweiler',
+  display: 'swap',
+});
 
 // Define fonts
 const inter = Inter({
@@ -35,7 +43,7 @@ export const metadata: Metadata = {
     siteName: 'Number Leader',
     images: [
       {
-        url: '/assets/img/og-image.jpg',
+        url: '/assets/img/og-image.png',
         width: 1200,
         height: 630,
       },
@@ -47,7 +55,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Number Leader - Empowering Startups. Enabling Investments!',
     description: 'Number Leader is a comprehensive platform designed to connect startups, investors, and enablers in the ecosystem.',
-    images: ['/assets/img/og-image.jpg'],
+    images: ['/assets/img/og-image.png'],
   },
 };
 
@@ -57,7 +65,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`scroll-smooth ${inter.variable} ${poppins.variable} ${roboto.variable}`}>
+    <html lang="en" className={`scroll-smooth ${inter.variable} ${poppins.variable} ${roboto.variable} ${haettenschweiler.variable}`}>
       <head>
         <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon/favicon-32x32.png" />
